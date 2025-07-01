@@ -38,10 +38,11 @@ class ScooterOrder:
         if '/' in address_cust: address_cust = address_cust.replace('/', '')
         if '(' in address_cust: address_cust = address_cust.replace('(', '')
         if ')' in address_cust: address_cust = address_cust.replace(')', '')
+        if '-' in address_cust: address_cust = address_cust.replace('-', '')
         if 'п.' in address_cust: address_cust = address_cust.replace('п.', '')
         if 'д.' in address_cust: address_cust = address_cust.replace('д.', '')
-        if 'г.' in address_cust: address_cust = address_cust.replace('д.', '')
-        if 'к.' in address_cust: address_cust = address_cust.replace('д.', '')
+        if 'г.' in address_cust: address_cust = address_cust.replace('г.', '')
+        if 'к.' in address_cust: address_cust = address_cust.replace('к.', '')
         if 'клх ' in address_cust: address_cust = address_cust.replace('клх ', '')
         if 'ст. ' in address_cust: address_cust = address_cust.replace('ст. ', '')
 
