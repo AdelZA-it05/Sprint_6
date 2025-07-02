@@ -8,12 +8,11 @@ import datetime
 import allure
 
 import data
-from pages.scooter_order import ScooterOrder
-import locators.page_enter_data_locators as locators
+from pages.enter_data_page import EnterDataPage
+from locators.enter_data_page_locators import EnterDataPageLocators
 
 
 class TestScooterEnterData:
-
 
     # драйвер для браузера Firefox
     driver = None
@@ -24,12 +23,11 @@ class TestScooterEnterData:
         cls.options.add_argument('+headless')
         cls.driver = webdriver.Firefox(cls.options)
 
-    # Проверка заполнения формы заказа (параметризация - два тестовых набора данных)
-    @allure.title('Заказ самоката')
-    @allure.description('На странице заполняем заявку на аренду и получаем подтверждение заявки')
+    @allure.title('Заполнение формы заказа самоката')
+    @allure.description('Проверка заполнения формы заказа (параметризация - два тестовых набора данных)')
     @allure.testcase('Тест-кейс из финального задания Sprtint_6')
     @allure.issue('Ссылка на баг', 'BUG-007')
-    @allure.step('Задаём параметры для тестовых наборов')  # декоратор
+    @allure.step('Задаём параметры для проверки различных наборов данных')
     @pytest.mark.parametrize(
         'name_cust, last_name_cust, address_cust, phone_cust, num_station, date_start_rent, num_duration_rent, num_color, comment',
         [
@@ -37,33 +35,35 @@ class TestScooterEnterData:
         , [fake.first_name().lower(), fake.last_name().lower(), fake.address(), fake.phone_number(), None, str(datetime.date.today()), None, None, '-Tекст в pазных раслladkah']]
     )
     def test_enter_data_into_order_form(self, name_cust, last_name_cust, address_cust, phone_cust, num_station, date_start_rent, num_duration_rent, num_color, comment):
-        self.driver.get(data.WEB_LINK)
-        scooterorder = ScooterOrder(self.driver)
+        enterdatapage = EnterDataPage(self.driver)
+        enterdatapage.go_to_url(data.WEB_LINK)
+
         # Кнопка заказать
-        parent_element = self.driver.find_element(*locators.order_button_up)
-        children_element = parent_element.find_element(*locators.order_button)
-        scooterorder.wait_element_clickable(children_element)
-        children_element.click()
+        parent_element = enterdatapage.find_element_with_wait(EnterDataPageLocators.order_button_up)
+        children_element = parent_element.find_element(*EnterDataPageLocators.order_button)
+        enterdatapage.wait_element_to_clickable(children_element)
+        enterdatapage.click_to_element(children_element)
         # Форма Для кого нужен самокат
-        scooterorder.wait_order_form()
+        enterdatapage.wait_to_element(EnterDataPageLocators.order_form)
         # Заполнение полей
-        scooterorder.set_order_fields(name_cust, last_name_cust, address_cust, phone_cust, num_station)
+        enterdatapage.set_order_fields(name_cust, last_name_cust, address_cust, phone_cust, num_station)
         # Кнопка Далее
-        scooterorder.click_next_button()
+        enterdatapage.click_to_element_locator(EnterDataPageLocators.order_button_next)
         # Форма Про аренду
-        scooterorder.wait_form_about_rent()
+        enterdatapage.wait_to_element(EnterDataPageLocators.form_about_rent)
         # Заполнение полей
-        scooterorder.set_rent_fields(date_start_rent, num_duration_rent, num_color, comment)
+        enterdatapage.set_rent_fields(date_start_rent, num_duration_rent, num_color, comment)
         # Кнопка Заказать
-        scooterorder.click_bike_order()
+        enterdatapage.click_to_element_locator(EnterDataPageLocators.order_bike_button)
         # Ожидание формы вопроса подтверждения заказа
-        scooterorder.wait_form_question_rent()
+        enterdatapage.wait_to_element(EnterDataPageLocators.wait_order_bike)
         # Клик Да на форме подтверждения заказа
-        scooterorder.click_bike_order_yes()
+        enterdatapage.click_to_element_locator(EnterDataPageLocators.order_bike_yes)
         # Ожидание формы Заказ оформлен
-        scooterorder.wait_form_want_order_bike()
+        enterdatapage.wait_to_element(EnterDataPageLocators.wait_form_order_placed)
         # Получение подтверждения заказа
-        assert scooterorder.get_order_placed_status()[0:14] == 'Номер заказа: '
+        assert enterdatapage.get_text_from_element(EnterDataPageLocators.order_placed)[0:14] == 'Номер заказа: '
+
 
     @classmethod
     def teardown_class(cls):

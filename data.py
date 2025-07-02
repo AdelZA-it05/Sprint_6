@@ -1,7 +1,7 @@
 # Ссылка на сайт Самокатов
 WEB_LINK = 'https://qa-scooter.praktikum-services.ru/'
-# Начальный номер вопросов и ответов
-QUESTIN_START_NUMBER = 8
+SCOOTER_LOGO = 'https://qa-scooter.praktikum-services.ru/'
+DZEN_LOGO = 'https://dzen.ru/?yredirect=true'
 # Ответы по номерам
 ANSWER_ASSERT_TEXTS  = ['Сутки — 400 рублей. Оплата курьеру — наличными или картой.'
 , 'Пока что у нас так: один заказ — один самокат. Если хотите покататься с друзьями, можете просто сделать несколько заказов — один за другим.'
