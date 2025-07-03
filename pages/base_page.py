@@ -4,7 +4,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 import locators.buttons_page_locators as locators
 
 
-class BasePage():
+class BasePage:
 
     def __init__(self, driver):
         self.driver = driver
@@ -35,6 +35,9 @@ class BasePage():
     def get_text_from_element(self, locator):
         return self.find_element_with_wait(locator).text
 
+    def get_current_url(self):
+        return self.driver.current_url
+
     def format_locators(self, locator_1, num):
         method, locator = locator_1
         locator = locator.format(num)
@@ -44,5 +47,8 @@ class BasePage():
 
     def wait_element_to_clickable(self, element_locator):
         self.wait.until(expected_conditions.element_to_be_clickable(element_locator))
+
+    def get_list_element(self, element_locator):
+            return self.driver.find_elements(*element_locator)
 
 

@@ -24,5 +24,18 @@ class MainPage(BasePage):
         paragraph_element = parent_element.find_element(By.TAG_NAME, "p")
         return paragraph_element.text
 
+    def check_answer_text(self, list_answer):
+        for question in self.get_list_element(MainPageLocators.questions_list):
+            self.scroll_to_element(question)
+            self.wait_to_element(MainPageLocators.wait_about_rent)
+            self.click_to_element(question)
+            locate_str = question.get_attribute(MainPageLocators.scroll_answer)
+            self.wait_element_by_id(locate_str)
+            if self.get_answer_text(locate_str) != list_answer[int(locate_str[-1])]:
+                return False
+        return True
+
+
+
 
 

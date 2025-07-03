@@ -10,18 +10,14 @@ import allure
 import data
 from pages.enter_data_page import EnterDataPage
 from locators.enter_data_page_locators import EnterDataPageLocators
+# Без этого импорта не видит фикстуру драйвер
+from conftest import driver
 
 
 class TestScooterEnterData:
 
     # драйвер для браузера Firefox
     driver = None
-
-    @classmethod
-    def setup_class(cls):
-        cls.options = Options()
-        cls.options.add_argument('+headless')
-        cls.driver = webdriver.Firefox(cls.options)
 
     @allure.title('Заполнение формы заказа самоката')
     @allure.description('Проверка заполнения формы заказа (параметризация - два тестовых набора данных)')
@@ -34,8 +30,8 @@ class TestScooterEnterData:
             [fake.first_name(), fake.last_name(), fake.address(), fake.phone_number(), 1, fake.date(pattern="%d.%m.%Y"), 1, 1, fake.text()]
         , [fake.first_name().lower(), fake.last_name().lower(), fake.address(), fake.phone_number(), None, str(datetime.date.today()), None, None, '-Tекст в pазных раслladkah']]
     )
-    def test_enter_data_into_order_form(self, name_cust, last_name_cust, address_cust, phone_cust, num_station, date_start_rent, num_duration_rent, num_color, comment):
-        enterdatapage = EnterDataPage(self.driver)
+    def test_enter_data_into_order_form(self, driver, name_cust, last_name_cust, address_cust, phone_cust, num_station, date_start_rent, num_duration_rent, num_color, comment):
+        enterdatapage = EnterDataPage(driver)
         enterdatapage.go_to_url(data.WEB_LINK)
 
         # Кнопка заказать
@@ -63,9 +59,3 @@ class TestScooterEnterData:
         enterdatapage.wait_to_element(EnterDataPageLocators.wait_form_order_placed)
         # Получение подтверждения заказа
         assert enterdatapage.get_text_from_element(EnterDataPageLocators.order_placed)[0:14] == 'Номер заказа: '
-
-
-    @classmethod
-    def teardown_class(cls):
-        # закрыли браузер
-        cls.driver.quit()

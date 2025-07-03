@@ -6,7 +6,8 @@ from locators.enter_data_page_locators import EnterDataPageLocators
 from pages.base_page import BasePage
 
 
-# Класс оформления заказа
+
+@allure.step("Класс оформления заказа")
 class EnterDataPage(BasePage):
 
     def set_name(self, name_cust):
@@ -23,6 +24,8 @@ class EnterDataPage(BasePage):
         if 'клх ' in address_cust: address_cust = address_cust.replace('клх ', '')
         if 'ст. ' in address_cust: address_cust = address_cust.replace('ст. ', '')
         if 'с. ' in address_cust: address_cust = address_cust.replace('с. ', '')
+        if 'к. ' in address_cust: address_cust = address_cust.replace('к. ', '')
+        if 'к ' in address_cust: address_cust = address_cust.replace('к ', '')
 
         self.driver.find_element(*EnterDataPageLocators.customer_addres).send_keys(address_cust)
     def set_station(self, num_station = None):
